@@ -1,0 +1,7 @@
+ul.aww-pics {
+  list-style: none;
+}
+
+ul.aww-pics li {
+  display: inline;
+}
