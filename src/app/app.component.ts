@@ -13,13 +13,16 @@ import 'rxjs/add/operator/do';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
   title = 'Aww Pics Search Engine';
   searchString: String;
-  searchSubject$ = new Subject<string>();
+  searchSortBy: String = 'new';
+  searchSubject$ = new Subject<any>();
   results$: Observable<any>;
   notFound = false;
-  searching = false; // Live user feedback of fetching data
+  searching = false;
+
+  // Live user feedback of fetching data
 
   constructor(private http: HttpClient) {}
 
@@ -27,8 +30,8 @@ export class AppComponent implements OnInit{
     this.results$ = this.searchSubject$
       .debounceTime(200)
       .distinctUntilChanged()
-      .do(searchString => console.log(searchString))
-      .switchMap(searchString => this.queryAPI(searchString));
+      .do(params => console.log(params))
+      .switchMap(params => this.queryAPI(params));
   }
 
   /**
@@ -36,10 +39,10 @@ export class AppComponent implements OnInit{
    * @param searchString
    * @returns {Observable<any[]>}
    */
-  queryAPI(searchString) {
+  queryAPI(params) {
     this.searching = true;
     this.notFound = false;
-    return this.http.get(`https://www.reddit.com/r/aww/search.json?q=${searchString}&limit=100&sort=new`)
+    return this.http.get(`https://www.reddit.com/r/aww/search.json?q=${params.q}&limit=100&sort=${params.sort}`)
       .map(result => {
 
         const finalResult = []; // valid data that has thumbnail only
@@ -67,9 +70,20 @@ export class AppComponent implements OnInit{
   }
 
   onSearchStringChange($event) {
-    console.log('Search String Change:', $event);
     if ($event) {
-      this.searchSubject$.next($event);
+      this.searchSubject$.next({
+        q: $event,
+        sort: this.searchSortBy
+      });
+    }
+  }
+
+  onSearchSortChange($event) {
+    if ($event) {
+      this.searchSubject$.next({
+        q: this.searchString,
+        sort: $event
+      });
     }
   }
 
@@ -81,5 +95,4 @@ export class AppComponent implements OnInit{
   validateUrl($url) {
     return $url.search('http') === 0; // url starts with http:// or https://
   }
-
 }
