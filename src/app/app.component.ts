@@ -82,7 +82,7 @@ export class AppComponent implements OnInit {
   }
 
   onSearchSortChange($event) {
-    if ($event) {
+    if ($event && this.searchString) {
       this.searchSubject$.next({
         q: this.searchString,
         sort: $event,
@@ -92,7 +92,7 @@ export class AppComponent implements OnInit {
   }
 
   onSearchLimitChange($event) {
-    if ($event) {
+    if ($event && this.searchString) {
       this.searchSubject$.next({
         q: this.searchString,
         sort: this.searchSortBy,
