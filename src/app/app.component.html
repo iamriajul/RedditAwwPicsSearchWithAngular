@@ -9,9 +9,9 @@
 
   <ul class="aww-pics">
     <ng-container *ngFor="let result of results$ | async">
-      <li *ngIf="result.data.thumbnail != 'default' && result.data.thumbnail != 'self'">
-        <a>
-          <img [src]="result.data.thumbnail" alt="Aww"/>
+      <li *ngIf="validateUrl(result.data.thumbnail)">
+        <a [href]="result.data.url" target="_blank" [title]="result.data.title">
+          <img [src]="result.data.thumbnail" [alt]="result.data.title"/>
         </a>
       </li>
     </ng-container>
