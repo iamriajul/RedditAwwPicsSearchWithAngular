@@ -5,6 +5,8 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/do';
 
 @Component({
   selector: 'app-root',
@@ -22,6 +24,8 @@ export class AppComponent implements OnInit{
   ngOnInit() {
     this.results$ = this.searchSubject$
       .debounceTime(200)
+      .distinctUntilChanged()
+      .do(searchString => console.log(searchString))
       .switchMap(searchString => this.queryAPI(searchString));
   }
 
