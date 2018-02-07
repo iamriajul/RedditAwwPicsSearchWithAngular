@@ -33,6 +33,7 @@ export class AppComponent implements OnInit{
 
   queryAPI(searchString) {
     this.searching = true;
+    this.notFound = false;
     return this.http.get(`https://www.reddit.com/r/aww/search.json?q=${searchString}`)
       .map(result => {
 
