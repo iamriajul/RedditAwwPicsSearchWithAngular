@@ -18,6 +18,7 @@ export class AppComponent implements OnInit{
   searchString: String;
   searchSubject$ = new Subject<string>();
   results$: Observable<any>;
+  notFound = false;
 
   constructor(private http: HttpClient) {}
 
@@ -31,7 +32,23 @@ export class AppComponent implements OnInit{
 
   queryAPI(searchString) {
     return this.http.get(`https://www.reddit.com/r/aww/search.json?q=${searchString}`)
-      .map(result => result['data']['children']);
+      .map(result => {
+
+        let found = false;
+        result['data']['children'].forEach(item => {
+          if (this.validateUrl(item.data.thumbnail)) {
+            found = true;
+          }
+        });
+
+        if (found) {
+          this.notFound = false;
+        } else {
+          this.notFound = true;
+        }
+
+        return result['data']['children'];
+      });
   }
 
   onSearchStringChange($event) {
