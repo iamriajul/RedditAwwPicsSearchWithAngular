@@ -17,6 +17,7 @@ export class AppComponent implements OnInit {
   title = 'Aww Pics Search Engine';
   searchString: String;
   searchSortBy: String = 'new';
+  searchLimit: Number = 100;
   searchSubject$ = new Subject<any>();
   results$: Observable<any>;
   notFound = false;
@@ -42,7 +43,8 @@ export class AppComponent implements OnInit {
   queryAPI(params) {
     this.searching = true;
     this.notFound = false;
-    return this.http.get(`https://www.reddit.com/r/aww/search.json?q=${params.q}&limit=100&sort=${params.sort}`)
+    return this.http.get(`https://www.reddit.com/r/aww/search.json` +
+    `?q=${encodeURIComponent(params.q)}&limit=${params.limit}&sort=${params.sort}`)
       .map(result => {
 
         const finalResult = []; // valid data that has thumbnail only
@@ -73,7 +75,8 @@ export class AppComponent implements OnInit {
     if ($event) {
       this.searchSubject$.next({
         q: $event,
-        sort: this.searchSortBy
+        sort: this.searchSortBy,
+        limit: this.searchLimit
       });
     }
   }
@@ -82,7 +85,18 @@ export class AppComponent implements OnInit {
     if ($event) {
       this.searchSubject$.next({
         q: this.searchString,
-        sort: $event
+        sort: $event,
+        limit: this.searchLimit
+      });
+    }
+  }
+
+  onSearchLimitChange($event) {
+    if ($event) {
+      this.searchSubject$.next({
+        q: this.searchString,
+        sort: this.searchSortBy,
+        limit: $event
       });
     }
   }
