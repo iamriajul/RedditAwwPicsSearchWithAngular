@@ -53,7 +53,9 @@ export class AppComponent implements OnInit{
 
   onSearchStringChange($event) {
     console.log('Search String Change:', $event);
-    this.searchSubject$.next($event);
+    if ($event) {
+      this.searchSubject$.next($event);
+    }
   }
 
   /**
