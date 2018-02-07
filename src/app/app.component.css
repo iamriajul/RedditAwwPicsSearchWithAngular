@@ -5,3 +5,12 @@ ul.aww-pics {
 ul.aww-pics li {
   display: inline;
 }
+
+.searchInput {
+  display: block;
+  margin: auto;
+  width: 300px;
+  height: 30px;
+  padding: 10px;
+  font-size: 2em;
+}
