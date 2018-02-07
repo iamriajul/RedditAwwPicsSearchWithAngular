@@ -19,6 +19,7 @@ export class AppComponent implements OnInit{
   searchSubject$ = new Subject<string>();
   results$: Observable<any>;
   notFound = false;
+  searching = false; // Live user feedback of fetching data
 
   constructor(private http: HttpClient) {}
 
@@ -31,6 +32,7 @@ export class AppComponent implements OnInit{
   }
 
   queryAPI(searchString) {
+    this.searching = true;
     return this.http.get(`https://www.reddit.com/r/aww/search.json?q=${searchString}`)
       .map(result => {
 
@@ -46,7 +48,7 @@ export class AppComponent implements OnInit{
         } else {
           this.notFound = true;
         }
-
+        this.searching = false;
         return result['data']['children'];
       });
   }
