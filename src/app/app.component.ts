@@ -31,10 +31,15 @@ export class AppComponent implements OnInit{
       .switchMap(searchString => this.queryAPI(searchString));
   }
 
+  /**
+   * Retrieve posts from Reddit api.
+   * @param searchString
+   * @returns {Observable<any[]>}
+   */
   queryAPI(searchString) {
     this.searching = true;
     this.notFound = false;
-    return this.http.get(`https://www.reddit.com/r/aww/search.json?q=${searchString}`)
+    return this.http.get(`https://www.reddit.com/r/aww/search.json?q=${searchString}&limit=100&sort=new`)
       .map(result => {
 
         const finalResult = []; // valid data that has thumbnail only
