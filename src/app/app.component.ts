@@ -37,20 +37,21 @@ export class AppComponent implements OnInit{
     return this.http.get(`https://www.reddit.com/r/aww/search.json?q=${searchString}`)
       .map(result => {
 
+        const finalResult = []; // valid data that has thumbnail only
         result['data']['children'].forEach((item, index) => {
 
-          if (!this.validateUrl(item.data.thumbnail)) {
-            result['data']['children'].splice(index, 1); // if it does not have any thumbnail then we are not gonna use it anyway!
+          if (this.validateUrl(item.data.thumbnail)) {
+            finalResult.push(item);
           }
 
         });
 
         this.searching = false; // setting to false so, our searching gif disappear
 
-        return result['data']['children'];
+        return finalResult;
       })
       .do(result => {
-
+        console.log(result);
         if (result.length > 0) {
           this.notFound = false;
         } else {
@@ -68,7 +69,7 @@ export class AppComponent implements OnInit{
   }
 
   /**
-   * Simple url validator function.
+   * Simple url validator function. return true when valid otherwise false
    * @param $url
    * @returns {boolean}
    */
